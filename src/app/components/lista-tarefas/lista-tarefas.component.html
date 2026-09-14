@@ -1,0 +1,44 @@
+<div class="container">
+  <h1>📋 Minhas Tarefas</h1>
+
+  <!-- Mensagem de Erro -->
+  <div *ngIf="erro" class="alerta alerta-erro">
+    <strong>⚠️ Erro:</strong> {{ erro }}
+    <button (click)="carregarTarefas()" class="btn-recarregar">Recarregar</button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando tarefas...</p>
+  </div>
+
+  <!-- Lista de Tarefas -->
+  <div *ngIf="!loading" class="tarefas-container">
+    <div *ngIf="tarefas.length === 0" class="vazio">
+      <p>😴 Nenhuma tarefa cadastrada ainda</p>
+      <p class="dica">Crie sua primeira tarefa para começar!</p>
+    </div>
+
+    <div *ngIf="tarefas.length > 0" class="lista">
+      <div *ngFor="let tarefa of tarefas" 
+           [ngClass]="['tarefa-card', getConclusaoClass(tarefa.concluida)]">
+        
+        <div class="tarefa-header">
+          <h3 class="titulo">{{ tarefa.titulo }}</h3>
+          <span [ngClass]="['status-badge', getStatusClass(tarefa.status)]">
+            {{ getStatusText(tarefa.status) }}
+          </span>
+        </div>
+
+        <p class="descricao">{{ tarefa.descricao }}</p>
+
+        <div class="tarefa-footer">
+          <span *ngIf="tarefa.concluida" class="concluido-badge">✅ Concluída</span>
+          <span *ngIf="!tarefa.concluida" class="pendente-badge">⏳ Pendente</span>
+          <button class="btn-deletar" (click)="deletarTarefa(tarefa.id)">🗑️ Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

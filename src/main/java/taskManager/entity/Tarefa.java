@@ -20,9 +20,7 @@ public class Tarefa {
     private String descricao;
     @Enumerated(value = EnumType.STRING)
     private Status status;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataDeInicio;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataDeFim;
     @NotNull
     private Boolean concluida;

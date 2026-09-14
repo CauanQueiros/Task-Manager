@@ -22,6 +22,7 @@ public class TarefaMapper {
 
     public static DtoResponse toDto (Tarefa tarefa){
         return new DtoResponse(
+                tarefa.getId(),
                 tarefa.getTitulo(),
                 tarefa.getDescricao(),
                 tarefa.getStatus(),

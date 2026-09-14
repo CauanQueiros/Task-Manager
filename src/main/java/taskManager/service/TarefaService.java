@@ -33,4 +33,11 @@ public class TarefaService {
         }
         return tarefaRepository.findAll();
     }
+
+    public void deletarTarefa (Long id){
+        if (!tarefaRepository.existsById(id)){
+            throw new IdNaoEncontradoException("Id não encontrado: " + id);
+        }
+        tarefaRepository.deleteById(id);
+    }
 }

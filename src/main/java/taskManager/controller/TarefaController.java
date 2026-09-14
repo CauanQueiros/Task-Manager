@@ -37,4 +37,10 @@ public class TarefaController {
         DtoResponse response = TarefaMapper.toDto(cadastrarTask);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletarTask(@PathVariable Long id) {
+        tarefaService.deletarTarefa(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

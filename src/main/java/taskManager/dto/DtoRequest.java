@@ -16,9 +16,7 @@ public record DtoRequest(
         String descricao,
         @Enumerated(value = EnumType.STRING)
         Status status,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime dataDeInicio,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime dataDeFim,
         @NotNull
         Boolean concluida

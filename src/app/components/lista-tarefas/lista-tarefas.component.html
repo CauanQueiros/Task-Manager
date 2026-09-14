@@ -36,6 +36,7 @@
         <div class="tarefa-footer">
           <span *ngIf="tarefa.concluida" class="concluido-badge">✅ Concluída</span>
           <span *ngIf="!tarefa.concluida" class="pendente-badge">⏳ Pendente</span>
+          <button class="btn-deletar" (click)="deletarTarefa(tarefa.id)">🗑️ Excluir</button>
         </div>
       </div>
     </div>

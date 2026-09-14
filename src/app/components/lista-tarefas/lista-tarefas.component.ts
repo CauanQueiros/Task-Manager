@@ -37,10 +37,23 @@ export class ListaTarefasComponent implements OnInit {
       }
     });
   }
+  
+  deletarTarefa(id: number): void {
+    if (!confirm('Tem certeza que deseja excluir esta tarefa?')) {
+      return;
+    }
 
-  /**
-   * Retorna classe CSS baseado no status
-   */
+    this.tarefaService.deletarTarefa(id).subscribe({
+      next: () => {
+        this.tarefas = this.tarefas.filter(t => t.id !== id);
+      },
+      error: (err) => {
+        this.erro = 'Erro ao excluir tarefa';
+        console.error('Erro:', err);
+      }
+    });
+  }
+
   getStatusClass(status: StatusTarefa): string {
     switch (status) {
       case StatusTarefa.FAZER:
@@ -54,9 +67,6 @@ export class ListaTarefasComponent implements OnInit {
     }
   }
 
-  /**
-   * Retorna texto amigável para o status
-   */
   getStatusText(status: StatusTarefa): string {
     switch (status) {
       case StatusTarefa.FAZER:
@@ -70,9 +80,6 @@ export class ListaTarefasComponent implements OnInit {
     }
   }
 
-  /**
-   * Retorna a classe de conclusão
-   */
   getConclusaoClass(concluida: boolean): string {
     return concluida ? 'concluida' : '';
   }

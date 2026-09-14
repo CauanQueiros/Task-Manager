@@ -188,6 +188,23 @@ h1 {
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #ecf0f1;
+  align-items: center;
+}
+
+.btn-deletar {
+  margin-left: auto;
+  background-color: #fee;
+  color: #c33;
+  border: 1px solid #f5c6c6;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-deletar:hover {
+  background-color: #f44;
+  color: white;
 }
 
 .concluido-badge,

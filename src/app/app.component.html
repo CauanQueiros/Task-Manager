@@ -1,0 +1,33 @@
+<div class="app-container">
+  <!-- Header com Navegação -->
+  <header class="navbar">
+    <div class="navbar-content">
+      <h1 class="logo">📝 Task Manager</h1>
+      <nav class="nav-links">
+        <button 
+          (click)="irPara('lista')" 
+          [ngClass]="{ 'active': paginaAtual === 'lista' }"
+          class="nav-btn">
+          📋 Minhas Tarefas
+        </button>
+        <button 
+          (click)="irPara('cadastro')" 
+          [ngClass]="{ 'active': paginaAtual === 'cadastro' }"
+          class="nav-btn">
+          ➕ Novo Cadastro
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+    <app-lista-tarefas *ngIf="paginaAtual === 'lista'"></app-lista-tarefas>
+    <app-cadastro-tarefa *ngIf="paginaAtual === 'cadastro'"></app-cadastro-tarefa>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2024 Task Manager - Gerenciamento de Tarefas</p>
+  </footer>
+</div>

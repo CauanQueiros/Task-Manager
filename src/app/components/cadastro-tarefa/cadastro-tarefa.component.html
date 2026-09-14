@@ -1,0 +1,127 @@
+<div class="container">
+  <div class="form-wrapper">
+    <h1>➕ Cadastrar Nova Tarefa</h1>
+
+    <!-- Mensagem de Sucesso -->
+    <div *ngIf="sucesso" class="alerta alerta-sucesso">
+      <strong>✅ Sucesso!</strong> Tarefa cadastrada com sucesso!
+    </div>
+
+    <!-- Mensagem de Erro -->
+    <div *ngIf="erro" class="alerta alerta-erro">
+      <strong>⚠️ Erro:</strong> {{ erro }}
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()" class="form">
+      
+      <!-- Campo Título -->
+      <div class="form-group">
+        <label for="titulo" class="label">Título <span class="required">*</span></label>
+        <input
+          type="text"
+          id="titulo"
+          formControlName="titulo"
+          class="input"
+          [ngClass]="{ 'input-erro': hasError('titulo') }"
+          placeholder="Ex: Implementar autenticação"
+          [disabled]="loading"
+        />
+        <span *ngIf="hasError('titulo')" class="erro-mensagem">
+          {{ getFieldError('titulo') }}
+        </span>
+      </div>
+
+      <!-- Campo Descrição -->
+      <div class="form-group">
+        <label for="descricao" class="label">Descrição <span class="required">*</span></label>
+        <textarea
+          id="descricao"
+          formControlName="descricao"
+          class="textarea"
+          [ngClass]="{ 'input-erro': hasError('descricao') }"
+          placeholder="Descreva os detalhes da tarefa..."
+          rows="4"
+          [disabled]="loading"
+        ></textarea>
+        <span *ngIf="hasError('descricao')" class="erro-mensagem">
+          {{ getFieldError('descricao') }}
+        </span>
+      </div>
+
+      <!-- Campo Status -->
+      <div class="form-group">
+        <label for="status" class="label">Status <span class="required">*</span></label>
+        <select
+          id="status"
+          formControlName="status"
+          class="select"
+          [disabled]="loading"
+        >
+          <option value="FAZER">A Fazer</option>
+          <option value="EM_PROGRESSO">Em Progresso</option>
+          <option value="CONCLUIDA">Concluída</option>
+        </select>
+      </div>
+
+      <!-- Campos de Data -->
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="dataDeInicio" class="label">Data de Início</label>
+          <input
+            type="datetime-local"
+            id="dataDeInicio"
+            formControlName="dataDeInicio"
+            class="input"
+            [disabled]="loading"
+          />
+        </div>
+
+        <div class="form-group flex-1">
+          <label for="dataDeFim" class="label">Data de Fim</label>
+          <input
+            type="datetime-local"
+            id="dataDeFim"
+            formControlName="dataDeFim"
+            class="input"
+            [disabled]="loading"
+          />
+        </div>
+      </div>
+
+      <!-- Checkbox Concluída -->
+      <div class="form-group checkbox-group">
+        <input
+          type="checkbox"
+          id="concluida"
+          formControlName="concluida"
+          class="checkbox"
+          [disabled]="loading"
+        />
+        <label for="concluida" class="checkbox-label">Marcar como concluída</label>
+      </div>
+
+      <!-- Botões -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="loading"
+        >
+          <span *ngIf="!loading">🚀 Cadastrar Tarefa</span>
+          <span *ngIf="loading">
+            <span class="spinner-pequeno"></span> Cadastrando...
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="limparFormulario()"
+          [disabled]="loading"
+        >
+          🔄 Limpar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

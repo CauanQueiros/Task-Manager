@@ -82,7 +82,7 @@
         ><input
           type="search"
           [(ngModel)]="busca"
-          placeholder="Buscar tarefa..."
+          placeholder="Buscar por título, ID ou prioridade..."
           aria-label="Buscar tarefas"
       /></label>
       <select
@@ -169,6 +169,52 @@
       <p class="descricao">
         {{ tarefa.descricao || "Sem descrição informada." }}
       </p>
+      <div class="datas" *ngIf="tarefa.dataDeInicio || tarefa.dataDeFim">
+        <span *ngIf="tarefa.dataDeInicio"
+          >▶ Início: {{ tarefa.dataDeInicio | date: "dd/MM/yyyy HH:mm" }}</span
+        >
+        <span *ngIf="tarefa.dataDeFim"
+          >✓ Fim: {{ tarefa.dataDeFim | date: "dd/MM/yyyy HH:mm" }}</span
+        >
+      </div>
+      <div class="acoes">
+        <button
+          *ngIf="tarefa.status === StatusTarefa.FAZER"
+          type="button"
+          class="btn-acao btn-iniciar"
+          [disabled]="estaAtualizando(tarefa.id)"
+          (click)="mudarStatus(tarefa, StatusTarefa.EM_PROGRESSO)"
+        >
+          ▶ Iniciar
+        </button>
+        <button
+          *ngIf="tarefa.status === StatusTarefa.EM_PROGRESSO"
+          type="button"
+          class="btn-acao btn-concluir"
+          [disabled]="estaAtualizando(tarefa.id)"
+          (click)="mudarStatus(tarefa, StatusTarefa.CONCLUIDA)"
+        >
+          ✓ Concluir
+        </button>
+        <button
+          *ngIf="tarefa.status === StatusTarefa.EM_PROGRESSO"
+          type="button"
+          class="btn-acao"
+          [disabled]="estaAtualizando(tarefa.id)"
+          (click)="mudarStatus(tarefa, StatusTarefa.FAZER)"
+        >
+          ⏸ Pausar
+        </button>
+        <button
+          *ngIf="tarefa.status === StatusTarefa.CONCLUIDA"
+          type="button"
+          class="btn-acao"
+          [disabled]="estaAtualizando(tarefa.id)"
+          (click)="mudarStatus(tarefa, StatusTarefa.EM_PROGRESSO)"
+        >
+          ↺ Reabrir
+        </button>
+      </div>
       <div class="tarefa-footer">
         <span class="task-id">TAREFA #{{ tarefa.id }}</span
         ><button

@@ -1,13 +1,13 @@
 export enum StatusTarefa {
-  FAZER = 'FAZER',
-  EM_PROGRESSO = 'EM_PROGRESSO',
-  CONCLUIDA = 'CONCLUIDA'
+  FAZER = "FAZER",
+  EM_PROGRESSO = "EM_PROGRESSO",
+  CONCLUIDA = "CONCLUIDA",
 }
 
 export enum PrioridadeTarefa {
-  BAIXA = 'BAIXA',
-  MEDIA = 'MEDIA',
-  ALTA = 'ALTA'
+  BAIXA = "BAIXA",
+  MEDIA = "MEDIA",
+  ALTA = "ALTA",
 }
 
 export interface Tarefa {
@@ -27,5 +27,7 @@ export interface TarefaResponse {
   descricao: string;
   status: StatusTarefa;
   prioridade: PrioridadeTarefa;
+  dataDeInicio?: string | null;
+  dataDeFim?: string | null;
   concluida: boolean;
 }

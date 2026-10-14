@@ -525,3 +525,47 @@ h1 {
     width: 100%;
   }
 }
+.datas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #8a8fa1;
+}
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.btn-acao {
+  border: 1px solid #e3e5ee;
+  background: #fff;
+  color: #555b6f;
+  padding: 7px 11px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-acao:hover:not(:disabled) {
+  border-color: #aaa2f8;
+  color: #6558d9;
+  background: #f8f7ff;
+}
+.btn-acao:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.btn-iniciar {
+  border-color: #cfe3f8;
+  color: #3179bf;
+  background: #f4f9ff;
+}
+.btn-concluir {
+  border-color: #c9ecda;
+  color: #21865e;
+  background: #f2fbf6;
+}

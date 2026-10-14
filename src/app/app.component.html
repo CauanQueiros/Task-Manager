@@ -1,33 +1,42 @@
 <div class="app-container">
-  <!-- Header com Navegação -->
   <header class="navbar">
     <div class="navbar-content">
-      <h1 class="logo">📝 Task Manager</h1>
-      <nav class="nav-links">
-        <button 
-          (click)="irPara('lista')" 
-          [ngClass]="{ 'active': paginaAtual === 'lista' }"
-          class="nav-btn">
-          📋 Minhas Tarefas
+      <a
+        class="brand"
+        href="#"
+        (click)="$event.preventDefault(); irPara('lista')"
+      >
+        <span class="brand-mark">✓</span
+        ><span
+          >task<span class="brand-light">flow</span
+          ><small>GESTÃO SIMPLES, DIA PRODUTIVO</small></span
+        >
+      </a>
+      <nav class="nav-links" aria-label="Navegação principal">
+        <button
+          (click)="irPara('lista')"
+          [ngClass]="{ active: paginaAtual === 'lista' }"
+          class="nav-btn"
+        >
+          <span>▤</span> Minhas tarefas
         </button>
-        <button 
-          (click)="irPara('cadastro')" 
-          [ngClass]="{ 'active': paginaAtual === 'cadastro' }"
-          class="nav-btn">
-          ➕ Novo Cadastro
+        <button
+          (click)="irPara('cadastro')"
+          [ngClass]="{ active: paginaAtual === 'cadastro' }"
+          class="nav-btn nav-primary"
+        >
+          <span>＋</span> Nova tarefa
         </button>
       </nav>
     </div>
   </header>
-
-  <!-- Conteúdo Principal -->
   <main class="main-content">
     <app-lista-tarefas *ngIf="paginaAtual === 'lista'"></app-lista-tarefas>
-    <app-cadastro-tarefa *ngIf="paginaAtual === 'cadastro'"></app-cadastro-tarefa>
+    <app-cadastro-tarefa
+      *ngIf="paginaAtual === 'cadastro'"
+    ></app-cadastro-tarefa>
   </main>
-
-  <!-- Footer -->
   <footer class="footer">
-    <p>&copy; 2024 Task Manager - Gerenciamento de Tarefas</p>
+    <span>taskflow</span><span>Um passo de cada vez.</span><span>© 2026</span>
   </footer>
 </div>

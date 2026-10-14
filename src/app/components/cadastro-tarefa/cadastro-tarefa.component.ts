@@ -1,26 +1,36 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TarefaService } from '../../services/tarefa.service';
-import { StatusTarefa, Tarefa } from '../../models/tarefa.model';
+import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { TarefaService } from "../../services/tarefa.service";
+import {
+  PrioridadeTarefa,
+  StatusTarefa,
+  Tarefa,
+} from "../../models/tarefa.model";
 
 @Component({
-  selector: 'app-cadastro-tarefa',
+  selector: "app-cadastro-tarefa",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './cadastro-tarefa.component.html',
-  styleUrls: ['./cadastro-tarefa.component.css']
+  templateUrl: "./cadastro-tarefa.component.html",
+  styleUrls: ["./cadastro-tarefa.component.css"],
 })
 export class CadastroTarefaComponent {
   formulario: FormGroup;
   statusOptions = Object.values(StatusTarefa);
+  prioridadeOptions = Object.values(PrioridadeTarefa);
   loading: boolean = false;
   sucesso: boolean = false;
-  erro: string = '';
+  erro: string = "";
 
   constructor(
     private fb: FormBuilder,
-    private tarefaService: TarefaService
+    private tarefaService: TarefaService,
   ) {
     this.formulario = this.createForm();
   }
@@ -30,12 +40,27 @@ export class CadastroTarefaComponent {
    */
   createForm(): FormGroup {
     return this.fb.group({
-      titulo: ['', [Validators.required, Validators.minLength(3)]],
-      descricao: ['', [Validators.required, Validators.minLength(5)]],
+      titulo: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(255),
+        ],
+      ],
+      descricao: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(500),
+        ],
+      ],
       status: [StatusTarefa.FAZER, Validators.required],
-      dataDeInicio: [''],
-      dataDeFim: [''],
-      concluida: [false]
+      prioridade: [PrioridadeTarefa.MEDIA, Validators.required],
+      dataDeInicio: [""],
+      dataDeFim: [""],
+      concluida: [false],
     });
   }
 
@@ -44,22 +69,34 @@ export class CadastroTarefaComponent {
    */
   onSubmit(): void {
     if (this.formulario.invalid) {
-      this.erro = 'Por favor, preencha todos os campos obrigatórios corretamente';
+      // Marca os campos como "tocados" para as mensagens de erro de cada campo aparecerem
+      this.formulario.markAllAsTouched();
+      this.erro =
+        "Por favor, preencha todos os campos obrigatórios corretamente";
       return;
     }
 
     this.loading = true;
-    this.erro = '';
+    this.erro = "";
     this.sucesso = false;
 
-    const tarefa: Tarefa = this.formulario.value;
+    const valores = this.formulario.value;
+    const tarefa: Tarefa = {
+      ...valores,
+      // datetime-local vazio vem como '' — o backend espera null
+      dataDeInicio: valores.dataDeInicio || null,
+      dataDeFim: valores.dataDeFim || null,
+      // mantém "concluida" coerente com o status escolhido
+      concluida: valores.status === StatusTarefa.CONCLUIDA,
+    };
 
     this.tarefaService.criarTarefa(tarefa).subscribe({
       next: (resposta) => {
         this.sucesso = true;
         this.formulario.reset({
           status: StatusTarefa.FAZER,
-          concluida: false
+          prioridade: PrioridadeTarefa.MEDIA,
+          concluida: false,
         });
         this.loading = false;
 
@@ -69,10 +106,12 @@ export class CadastroTarefaComponent {
         }, 3000);
       },
       error: (err) => {
-        this.erro = 'Erro ao cadastrar tarefa: ' + (err.error?.message || 'Tente novamente');
-        console.error('Erro:', err);
+        this.erro =
+          "Erro ao cadastrar tarefa: " +
+          (err.error?.message || "Tente novamente");
+        console.error("Erro:", err);
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -81,20 +120,24 @@ export class CadastroTarefaComponent {
    */
   getFieldError(fieldName: string): string {
     const field = this.formulario.get(fieldName);
-    
+
     if (!field || !field.errors || !field.touched) {
-      return '';
+      return "";
     }
 
-    if (field.errors['required']) {
+    if (field.errors["required"]) {
       return `${this.getFieldLabel(fieldName)} é obrigatório`;
     }
-    if (field.errors['minlength']) {
-      const minLength = field.errors['minlength'].requiredLength;
+    if (field.errors["maxlength"]) {
+      const maxLength = field.errors["maxlength"].requiredLength;
+      return `${this.getFieldLabel(fieldName)} deve ter no máximo ${maxLength} caracteres`;
+    }
+    if (field.errors["minlength"]) {
+      const minLength = field.errors["minlength"].requiredLength;
       return `${this.getFieldLabel(fieldName)} deve ter no mínimo ${minLength} caracteres`;
     }
-    
-    return '';
+
+    return "";
   }
 
   /**
@@ -102,11 +145,12 @@ export class CadastroTarefaComponent {
    */
   getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
-      titulo: 'Título',
-      descricao: 'Descrição',
-      status: 'Status',
-      dataDeInicio: 'Data de Início',
-      dataDeFim: 'Data de Fim'
+      titulo: "Título",
+      descricao: "Descrição",
+      status: "Status",
+      prioridade: "Prioridade",
+      dataDeInicio: "Data de Início",
+      dataDeFim: "Data de Fim",
     };
     return labels[fieldName] || fieldName;
   }
@@ -123,9 +167,11 @@ export class CadastroTarefaComponent {
    * Limpa o formulário
    */
   limparFormulario(): void {
+    this.erro = "";
     this.formulario.reset({
       status: StatusTarefa.FAZER,
-      concluida: false
+      prioridade: PrioridadeTarefa.MEDIA,
+      concluida: false,
     });
   }
 }

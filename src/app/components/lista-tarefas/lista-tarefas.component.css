@@ -491,3 +491,37 @@ h1 {
     margin-bottom: 25px;
   }
 }
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.prioridade-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 9px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+.prioridade-alta {
+  background: #ffeded;
+  color: #b93b3b;
+}
+.prioridade-media {
+  background: #fff7df;
+  color: #9a6b12;
+}
+.prioridade-baixa {
+  background: #eef1f7;
+  color: #5a6379;
+}
+@media (max-width: 620px) {
+  .filters .status-filter {
+    width: 100%;
+  }
+}

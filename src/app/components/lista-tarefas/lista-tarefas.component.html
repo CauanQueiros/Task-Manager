@@ -95,6 +95,17 @@
         <option value="EM_PROGRESSO">Em progresso</option>
         <option value="CONCLUIDA">Concluídas</option>
       </select>
+      <select
+        [ngModel]="filtroPrioridade"
+        (ngModelChange)="mudarPrioridade($event)"
+        aria-label="Filtrar por prioridade"
+        class="status-filter"
+      >
+        <option value="TODAS">Todas as prioridades</option>
+        <option value="ALTA">Alta</option>
+        <option value="MEDIA">Média</option>
+        <option value="BAIXA">Baixa</option>
+      </select>
     </div>
   </div>
 
@@ -104,26 +115,22 @@
   </div>
 
   <div *ngIf="!loading && tarefasFiltradas.length === 0" class="empty-state">
-    <div class="empty-icon">{{ tarefas.length === 0 ? "✦" : "⌕" }}</div>
+    <div class="empty-icon">{{ !temFiltroAtivo ? "✦" : "⌕" }}</div>
     <h3>
       {{
-        tarefas.length === 0
+        !temFiltroAtivo
           ? "Tudo começa com uma tarefa"
           : "Nenhuma tarefa encontrada"
       }}
     </h3>
     <p>
       {{
-        tarefas.length === 0
+        !temFiltroAtivo
           ? "Adicione sua primeira tarefa e tire seus planos do papel."
-          : "Tente mudar a busca ou selecionar outro status."
+          : "Tente mudar a busca ou selecionar outro status ou prioridade."
       }}
     </p>
-    <button
-      *ngIf="tarefas.length > 0"
-      class="btn-clear"
-      (click)="limparFiltros()"
-    >
+    <button *ngIf="temFiltroAtivo" class="btn-clear" (click)="limparFiltros()">
       Limpar filtros
     </button>
   </div>
@@ -144,9 +151,19 @@
                 : "○"
           }}
         </div>
-        <span [ngClass]="['status-badge', getStatusClass(tarefa.status)]">{{
-          getStatusText(tarefa.status)
-        }}</span>
+        <div class="badges">
+          <span
+            [ngClass]="[
+              'prioridade-badge',
+              getPrioridadeClass(tarefa.prioridade),
+            ]"
+            title="Prioridade"
+            >⚑ {{ getPrioridadeText(tarefa.prioridade) }}</span
+          >
+          <span [ngClass]="['status-badge', getStatusClass(tarefa.status)]">{{
+            getStatusText(tarefa.status)
+          }}</span>
+        </div>
       </div>
       <h3 class="titulo">{{ tarefa.titulo }}</h3>
       <p class="descricao">

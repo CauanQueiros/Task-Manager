@@ -25,6 +25,7 @@
           class="input"
           [ngClass]="{ 'input-erro': hasError('titulo') }"
           placeholder="Ex: Implementar autenticação"
+          maxlength="255"
           [disabled]="loading"
         />
         <span *ngIf="hasError('titulo')" class="erro-mensagem">
@@ -44,6 +45,7 @@
           [ngClass]="{ 'input-erro': hasError('descricao') }"
           placeholder="Descreva os detalhes da tarefa..."
           rows="4"
+          maxlength="500"
           [disabled]="loading"
         ></textarea>
         <span *ngIf="hasError('descricao')" class="erro-mensagem">
@@ -51,21 +53,39 @@
         </span>
       </div>
 
-      <!-- Campo Status -->
-      <div class="form-group">
-        <label for="status" class="label"
-          >Status <span class="required">*</span></label
-        >
-        <select
-          id="status"
-          formControlName="status"
-          class="select"
-          [disabled]="loading"
-        >
-          <option value="FAZER">A Fazer</option>
-          <option value="EM_PROGRESSO">Em Progresso</option>
-          <option value="CONCLUIDA">Concluída</option>
-        </select>
+      <!-- Campos Status e Prioridade -->
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="status" class="label"
+            >Status <span class="required">*</span></label
+          >
+          <select
+            id="status"
+            formControlName="status"
+            class="select"
+            [disabled]="loading"
+          >
+            <option value="FAZER">A Fazer</option>
+            <option value="EM_PROGRESSO">Em Progresso</option>
+            <option value="CONCLUIDA">Concluída</option>
+          </select>
+        </div>
+
+        <div class="form-group flex-1">
+          <label for="prioridade" class="label"
+            >Prioridade <span class="required">*</span></label
+          >
+          <select
+            id="prioridade"
+            formControlName="prioridade"
+            class="select"
+            [disabled]="loading"
+          >
+            <option value="BAIXA">Baixa</option>
+            <option value="MEDIA">Média</option>
+            <option value="ALTA">Alta</option>
+          </select>
+        </div>
       </div>
 
       <!-- Campos de Data -->

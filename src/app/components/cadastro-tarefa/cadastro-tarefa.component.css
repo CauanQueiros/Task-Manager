@@ -1,19 +1,20 @@
 .container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: auto;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 42px 20px 60px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .form-wrapper {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(32, 35, 74, 0.07);
+  border: 1px solid #e9eaf1;
   padding: 2rem;
-  max-width: 600px;
+  max-width: 680px;
   width: 100%;
   animation: slideIn 0.3s ease-out;
 }
@@ -48,8 +49,12 @@ h1 {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .alerta-sucesso {
@@ -105,7 +110,7 @@ h1 {
   padding: 0.75rem;
   border: 2px solid #ecf0f1;
   border-radius: 6px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1rem;
   transition: all 0.3s ease;
 }
@@ -114,8 +119,8 @@ h1 {
 .textarea:focus,
 .select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #7668ed;
+  box-shadow: 0 0 0 3px rgba(118, 104, 237, 0.12);
 }
 
 .input:disabled,
@@ -154,7 +159,7 @@ h1 {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: #667eea;
+  accent-color: #7668ed;
 }
 
 .checkbox:disabled {
@@ -192,7 +197,7 @@ h1 {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8b7cf6 0%, #6356dc 100%);
   color: white;
 }
 
@@ -229,8 +234,12 @@ h1 {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsivo */

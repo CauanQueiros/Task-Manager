@@ -1,44 +1,167 @@
-<div class="container">
-  <h1>📋 Minhas Tarefas</h1>
-
-  <!-- Mensagem de Erro -->
-  <div *ngIf="erro" class="alerta alerta-erro">
-    <strong>⚠️ Erro:</strong> {{ erro }}
-    <button (click)="carregarTarefas()" class="btn-recarregar">Recarregar</button>
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <span class="eyebrow">SEU ESPAÇO DE PRODUTIVIDADE</span>
+      <h1>Minhas tarefas<span class="heading-dot">.</span></h1>
+      <p class="subtitle">
+        Organize suas prioridades e acompanhe seu progresso.
+      </p>
+    </div>
+    <button
+      class="btn-refresh"
+      type="button"
+      (click)="carregarTarefas()"
+      [disabled]="loading"
+    >
+      ↻ Atualizar
+    </button>
   </div>
 
-  <!-- Loading -->
+  <div class="stats-grid">
+    <article class="stat-card stat-total">
+      <span class="stat-icon">▤</span>
+      <div>
+        <span class="stat-label">Total de tarefas</span
+        ><strong>{{ tarefas.length }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-todo">
+      <span class="stat-icon">◷</span>
+      <div>
+        <span class="stat-label">A fazer</span
+        ><strong>{{ contarPorStatus("FAZER") }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-progress">
+      <span class="stat-icon">↗</span>
+      <div>
+        <span class="stat-label">Em progresso</span
+        ><strong>{{ contarPorStatus("EM_PROGRESSO") }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-done">
+      <span class="stat-icon">✓</span>
+      <div>
+        <span class="stat-label">Concluídas</span
+        ><strong>{{ contarPorStatus("CONCLUIDA") }}</strong>
+      </div>
+    </article>
+  </div>
+
+  <div class="progress-panel" *ngIf="tarefas.length > 0">
+    <div class="progress-copy">
+      <div>
+        <strong>Seu progresso</strong>
+        <p>Continue assim — cada tarefa conta.</p>
+      </div>
+      <strong class="progress-percent">{{ percentualConcluido }}%</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="percentualConcluido"></div>
+    </div>
+  </div>
+
+  <div *ngIf="erro" class="alerta alerta-erro">
+    <span>⚠ {{ erro }}</span
+    ><button (click)="carregarTarefas()" class="btn-recarregar">
+      Tentar novamente
+    </button>
+  </div>
+
+  <div class="toolbar">
+    <div class="section-title">
+      <h2>Visão geral</h2>
+      <span
+        >{{ tarefasFiltradas.length }}
+        {{ tarefasFiltradas.length === 1 ? "tarefa" : "tarefas" }}</span
+      >
+    </div>
+    <div class="filters">
+      <label class="search-box"
+        ><span>⌕</span
+        ><input
+          type="search"
+          [(ngModel)]="busca"
+          placeholder="Buscar tarefa..."
+          aria-label="Buscar tarefas"
+      /></label>
+      <select
+        [(ngModel)]="filtroStatus"
+        aria-label="Filtrar por status"
+        class="status-filter"
+      >
+        <option value="TODOS">Todos os status</option>
+        <option value="FAZER">A fazer</option>
+        <option value="EM_PROGRESSO">Em progresso</option>
+        <option value="CONCLUIDA">Concluídas</option>
+      </select>
+    </div>
+  </div>
+
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
-    <p>Carregando tarefas...</p>
+    <p>Carregando suas tarefas...</p>
   </div>
 
-  <!-- Lista de Tarefas -->
-  <div *ngIf="!loading" class="tarefas-container">
-    <div *ngIf="tarefas.length === 0" class="vazio">
-      <p>😴 Nenhuma tarefa cadastrada ainda</p>
-      <p class="dica">Crie sua primeira tarefa para começar!</p>
-    </div>
+  <div *ngIf="!loading && tarefasFiltradas.length === 0" class="empty-state">
+    <div class="empty-icon">{{ tarefas.length === 0 ? "✦" : "⌕" }}</div>
+    <h3>
+      {{
+        tarefas.length === 0
+          ? "Tudo começa com uma tarefa"
+          : "Nenhuma tarefa encontrada"
+      }}
+    </h3>
+    <p>
+      {{
+        tarefas.length === 0
+          ? "Adicione sua primeira tarefa e tire seus planos do papel."
+          : "Tente mudar a busca ou selecionar outro status."
+      }}
+    </p>
+    <button
+      *ngIf="tarefas.length > 0"
+      class="btn-clear"
+      (click)="limparFiltros()"
+    >
+      Limpar filtros
+    </button>
+  </div>
 
-    <div *ngIf="tarefas.length > 0" class="lista">
-      <div *ngFor="let tarefa of tarefas" 
-           [ngClass]="['tarefa-card', getConclusaoClass(tarefa.concluida)]">
-        
-        <div class="tarefa-header">
-          <h3 class="titulo">{{ tarefa.titulo }}</h3>
-          <span [ngClass]="['status-badge', getStatusClass(tarefa.status)]">
-            {{ getStatusText(tarefa.status) }}
-          </span>
+  <div *ngIf="!loading && tarefasFiltradas.length > 0" class="lista">
+    <article
+      *ngFor="let tarefa of tarefasFiltradas"
+      [ngClass]="['tarefa-card', getConclusaoClass(tarefa.concluida)]"
+    >
+      <div class="card-accent" [ngClass]="getStatusClass(tarefa.status)"></div>
+      <div class="tarefa-header">
+        <div class="task-symbol" [ngClass]="getStatusClass(tarefa.status)">
+          {{
+            tarefa.status === "CONCLUIDA"
+              ? "✓"
+              : tarefa.status === "EM_PROGRESSO"
+                ? "↗"
+                : "○"
+          }}
         </div>
-
-        <p class="descricao">{{ tarefa.descricao }}</p>
-
-        <div class="tarefa-footer">
-          <span *ngIf="tarefa.concluida" class="concluido-badge">✅ Concluída</span>
-          <span *ngIf="!tarefa.concluida" class="pendente-badge">⏳ Pendente</span>
-          <button class="btn-deletar" (click)="deletarTarefa(tarefa.id)">🗑️ Excluir</button>
-        </div>
+        <span [ngClass]="['status-badge', getStatusClass(tarefa.status)]">{{
+          getStatusText(tarefa.status)
+        }}</span>
       </div>
-    </div>
+      <h3 class="titulo">{{ tarefa.titulo }}</h3>
+      <p class="descricao">
+        {{ tarefa.descricao || "Sem descrição informada." }}
+      </p>
+      <div class="tarefa-footer">
+        <span class="task-id">TAREFA #{{ tarefa.id }}</span
+        ><button
+          class="btn-deletar"
+          (click)="deletarTarefa(tarefa.id)"
+          aria-label="Excluir tarefa"
+        >
+          Excluir <span>×</span>
+        </button>
+      </div>
+    </article>
   </div>
-</div>
+</section>

@@ -1,13 +1,29 @@
-/* Estilos globais da aplicação */
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap");
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-html, body {
-  height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
-  color: #2c3e50;
+html,
+body {
+  min-height: 100%;
+  font-family: "DM Sans", "Segoe UI", sans-serif;
+  background: #f8f9fc;
+  color: #202338;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #aaa2f8;
+  outline-offset: 2px;
 }

@@ -2,7 +2,8 @@ package taskManager.controller;
 
 import taskManager.dto.DtoResponse;
 import taskManager.dto.DtoRequest;
-import taskManager.entity.Status;
+import taskManager.dto.DtoStatusRequest;
+import taskManager.entity.Prioridade;
 import taskManager.entity.Tarefa;
 import taskManager.mapper.TarefaMapper;
 import taskManager.service.TarefaService;
@@ -24,8 +25,8 @@ public class TarefaController {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<DtoResponse>> listarTasks() {
-        List<Tarefa> tarefa = tarefaService.listarTarefa();
+    public ResponseEntity<List<DtoResponse>> listarTasks(@RequestParam(required = false) Prioridade prioridade) {
+        List<Tarefa> tarefa = tarefaService.listarTarefa(prioridade);
         List<DtoResponse> response = TarefaMapper.toResponseList(tarefa);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -36,6 +37,13 @@ public class TarefaController {
         Tarefa cadastrarTask = tarefaService.criarTarefa(tarefa);
         DtoResponse response = TarefaMapper.toDto(cadastrarTask);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<DtoResponse> alterarStatus(@PathVariable Long id,
+                                                     @RequestBody @Valid DtoStatusRequest dtoStatus) {
+        Tarefa atualizada = tarefaService.alterarStatus(id, dtoStatus.status());
+        return ResponseEntity.status(HttpStatus.OK).body(TarefaMapper.toDto(atualizada));
     }
 
     @DeleteMapping("/deletar/{id}")

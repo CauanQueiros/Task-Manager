@@ -1,6 +1,5 @@
 package taskManager.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,11 +23,15 @@ public class Tarefa {
     private LocalDateTime dataDeFim;
     @NotNull
     private Boolean concluida;
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) NOT NULL DEFAULT 'MEDIA'")
+    private Prioridade prioridade = Prioridade.MEDIA;
 
-    public Tarefa(String titulo, String descricao, Status status, LocalDateTime dataDeInicio, LocalDateTime dataDeFim, Boolean concluida) {
+    public Tarefa(String titulo, String descricao, Status status, Prioridade prioridade, LocalDateTime dataDeInicio, LocalDateTime dataDeFim, Boolean concluida) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.status = status;
+        this.prioridade = prioridade;
         this.dataDeInicio = dataDeInicio;
         this.dataDeFim = dataDeFim;
         this.concluida = concluida;
@@ -67,6 +70,14 @@ public class Tarefa {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Prioridade getPrioridade() {
+        return prioridade;
+    }
+
+    public void setPrioridade(Prioridade prioridade) {
+        this.prioridade = prioridade;
     }
 
     public LocalDateTime getDataDeInicio() {

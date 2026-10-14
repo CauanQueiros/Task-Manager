@@ -14,6 +14,7 @@ public class TarefaMapper {
                 dto.titulo(),
                 dto.descricao(),
                 dto.status(),
+                dto.prioridade(),
                 dto.dataDeInicio(),
                 dto.dataDeFim(),
                 dto.concluida()
@@ -26,6 +27,9 @@ public class TarefaMapper {
                 tarefa.getTitulo(),
                 tarefa.getDescricao(),
                 tarefa.getStatus(),
+                tarefa.getPrioridade(),
+                tarefa.getDataDeInicio(),
+                tarefa.getDataDeFim(),
                 tarefa.getConcluida()
         );
     }

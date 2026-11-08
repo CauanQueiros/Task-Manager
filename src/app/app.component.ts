@@ -1,27 +1,23 @@
 import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterModule, Router } from "@angular/router";
-import { ListaTarefasComponent } from "./components/lista-tarefas/lista-tarefas.component";
-import { CadastroTarefaComponent } from "./components/cadastro-tarefa/cadastro-tarefa.component";
+import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import { AuthService } from "./services/auth.service";
 
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ListaTarefasComponent,
-    CadastroTarefaComponent,
-  ],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
-  paginaAtual: "lista" | "cadastro" = "lista";
+  constructor(public auth: AuthService) {}
 
-  constructor(private router: Router) {}
+  get inicialDoUsuario(): string {
+    return (this.auth.usuario?.nome || "?").trim().charAt(0).toUpperCase();
+  }
 
-  irPara(pagina: "lista" | "cadastro"): void {
-    this.paginaAtual = pagina;
+  sair(): void {
+    this.auth.logout();
   }
 }

@@ -1,40 +1,45 @@
 <div class="app-container">
   <header class="navbar">
     <div class="navbar-content">
-      <a
-        class="brand"
-        href="#"
-        (click)="$event.preventDefault(); irPara('lista')"
-      >
+      <a class="brand" routerLink="/">
         <span class="brand-mark">✓</span
         ><span
           >task<span class="brand-light">flow</span
           ><small>GESTÃO SIMPLES, DIA PRODUTIVO</small></span
         >
       </a>
-      <nav class="nav-links" aria-label="Navegação principal">
-        <button
-          (click)="irPara('lista')"
-          [ngClass]="{ active: paginaAtual === 'lista' }"
+      <nav
+        *ngIf="auth.estaAutenticado()"
+        class="nav-links"
+        aria-label="Navegação principal"
+      >
+        <a
+          routerLink="/tarefas"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="nav-btn"
         >
           <span>▤</span> Minhas tarefas
-        </button>
-        <button
-          (click)="irPara('cadastro')"
-          [ngClass]="{ active: paginaAtual === 'cadastro' }"
+        </a>
+        <a
+          routerLink="/tarefas/nova"
+          routerLinkActive="active"
           class="nav-btn nav-primary"
         >
           <span>＋</span> Nova tarefa
+        </a>
+        <span class="user-chip" [title]="auth.usuario?.email || ''">
+          <span class="user-avatar">{{ inicialDoUsuario }}</span>
+          <span class="user-name">{{ auth.usuario?.nome }}</span>
+        </span>
+        <button type="button" class="nav-btn nav-sair" (click)="sair()">
+          Sair
         </button>
       </nav>
     </div>
   </header>
   <main class="main-content">
-    <app-lista-tarefas *ngIf="paginaAtual === 'lista'"></app-lista-tarefas>
-    <app-cadastro-tarefa
-      *ngIf="paginaAtual === 'cadastro'"
-    ></app-cadastro-tarefa>
+    <router-outlet></router-outlet>
   </main>
   <footer class="footer">
     <span>taskflow</span><span>Um passo de cada vez.</span><span>© 2026</span>

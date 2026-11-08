@@ -33,3 +33,11 @@ logging:
   level:
     root: INFO
     taskManager: DEBUG
+
+# Spring Security / JWT
+api:
+  security:
+    token:
+      # Em produção defina a variável de ambiente JWT_SECRET (32+ caracteres aleatórios)
+      secret: ${JWT_SECRET:troque-esta-chave-em-producao-use-32-ou-mais-caracteres}
+      expiracao-horas: 2

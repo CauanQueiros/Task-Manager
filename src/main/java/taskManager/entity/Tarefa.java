@@ -24,6 +24,9 @@ public class Tarefa {
     private LocalDateTime dataDeFim;
     @NotNull
     private Boolean concluida;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
+    private Usuario usuario;
 
     public Tarefa(String titulo, String descricao, Status status, LocalDateTime dataDeInicio, LocalDateTime dataDeFim, Boolean concluida) {
         this.titulo = titulo;
@@ -91,5 +94,13 @@ public class Tarefa {
 
     public void setConcluida(Boolean concluida) {
         this.concluida = concluida;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

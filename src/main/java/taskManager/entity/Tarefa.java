@@ -1,5 +1,6 @@
 package taskManager.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,13 +20,15 @@ public class Tarefa {
     private String descricao;
     @Enumerated(value = EnumType.STRING)
     private Status status;
+    @Enumerated(value = EnumType.STRING)
+    private Prioridade prioridade;
     private LocalDateTime dataDeInicio;
     private LocalDateTime dataDeFim;
     @NotNull
     private Boolean concluida;
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "VARCHAR(20) NOT NULL DEFAULT 'MEDIA'")
-    private Prioridade prioridade = Prioridade.MEDIA;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
+    private Usuario usuario;
 
     public Tarefa(String titulo, String descricao, Status status, Prioridade prioridade, LocalDateTime dataDeInicio, LocalDateTime dataDeFim, Boolean concluida) {
         this.titulo = titulo;
@@ -102,5 +105,13 @@ public class Tarefa {
 
     public void setConcluida(Boolean concluida) {
         this.concluida = concluida;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

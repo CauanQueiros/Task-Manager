@@ -3,13 +3,15 @@ package taskManager.controller;
 import taskManager.dto.DtoResponse;
 import taskManager.dto.DtoRequest;
 import taskManager.dto.DtoStatusRequest;
-import taskManager.entity.Prioridade;
+import taskManager.entity.Status;
 import taskManager.entity.Tarefa;
+import taskManager.entity.Usuario;
 import taskManager.mapper.TarefaMapper;
 import taskManager.service.TarefaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,30 +27,30 @@ public class TarefaController {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<DtoResponse>> listarTasks(@RequestParam(required = false) Prioridade prioridade) {
-        List<Tarefa> tarefa = tarefaService.listarTarefa(prioridade);
+    public ResponseEntity<List<DtoResponse>> listarTasks(@AuthenticationPrincipal Usuario usuario) {
+        List<Tarefa> tarefa = tarefaService.listarTarefa(usuario);
         List<DtoResponse> response = TarefaMapper.toResponseList(tarefa);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<DtoResponse> atualizarStatus(@PathVariable Long id, @RequestBody @Valid DtoStatusRequest request, @AuthenticationPrincipal Usuario usuario) {
+        Tarefa tarefa = tarefaService.atualizarStatus(id, request.status(), usuario);
+        return ResponseEntity.ok(TarefaMapper.toDto(tarefa));
+    }
+
     @PostMapping("/cadastrar")
-    public ResponseEntity<DtoResponse> cadastrarTask(@RequestBody @Valid DtoRequest dtoRequest) {
+    public ResponseEntity<DtoResponse> cadastrarTask(@RequestBody @Valid DtoRequest dtoRequest, @AuthenticationPrincipal Usuario usuario) {
         Tarefa tarefa = TarefaMapper.toEntity(dtoRequest);
-        Tarefa cadastrarTask = tarefaService.criarTarefa(tarefa);
+        Tarefa cadastrarTask = tarefaService.criarTarefa(tarefa, usuario);
         DtoResponse response = TarefaMapper.toDto(cadastrarTask);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<DtoResponse> alterarStatus(@PathVariable Long id,
-                                                     @RequestBody @Valid DtoStatusRequest dtoStatus) {
-        Tarefa atualizada = tarefaService.alterarStatus(id, dtoStatus.status());
-        return ResponseEntity.status(HttpStatus.OK).body(TarefaMapper.toDto(atualizada));
-    }
-
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarTask(@PathVariable Long id) {
-        tarefaService.deletarTarefa(id);
+    public ResponseEntity<Void> deletarTask(@PathVariable Long id,
+                                            @AuthenticationPrincipal Usuario usuario) {
+        tarefaService.deletarTarefa(id, usuario);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

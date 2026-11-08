@@ -2,6 +2,7 @@ package taskManager.controller;
 
 import taskManager.dto.DtoResponse;
 import taskManager.dto.DtoRequest;
+import taskManager.dto.DtoStatusRequest;
 import taskManager.entity.Status;
 import taskManager.entity.Tarefa;
 import taskManager.entity.Usuario;
@@ -32,9 +33,14 @@ public class TarefaController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<DtoResponse> atualizarStatus(@PathVariable Long id, @RequestBody @Valid DtoStatusRequest request, @AuthenticationPrincipal Usuario usuario) {
+        Tarefa tarefa = tarefaService.atualizarStatus(id, request.status(), usuario);
+        return ResponseEntity.ok(TarefaMapper.toDto(tarefa));
+    }
+
     @PostMapping("/cadastrar")
-    public ResponseEntity<DtoResponse> cadastrarTask(@RequestBody @Valid DtoRequest dtoRequest,
-                                                     @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<DtoResponse> cadastrarTask(@RequestBody @Valid DtoRequest dtoRequest, @AuthenticationPrincipal Usuario usuario) {
         Tarefa tarefa = TarefaMapper.toEntity(dtoRequest);
         Tarefa cadastrarTask = tarefaService.criarTarefa(tarefa, usuario);
         DtoResponse response = TarefaMapper.toDto(cadastrarTask);

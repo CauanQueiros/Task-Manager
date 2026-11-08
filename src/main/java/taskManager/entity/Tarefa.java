@@ -20,6 +20,8 @@ public class Tarefa {
     private String descricao;
     @Enumerated(value = EnumType.STRING)
     private Status status;
+    @Enumerated(value = EnumType.STRING)
+    private Prioridade prioridade;
     private LocalDateTime dataDeInicio;
     private LocalDateTime dataDeFim;
     @NotNull
@@ -28,10 +30,11 @@ public class Tarefa {
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
     private Usuario usuario;
 
-    public Tarefa(String titulo, String descricao, Status status, LocalDateTime dataDeInicio, LocalDateTime dataDeFim, Boolean concluida) {
+    public Tarefa(String titulo, String descricao, Status status, Prioridade prioridade, LocalDateTime dataDeInicio, LocalDateTime dataDeFim, Boolean concluida) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.status = status;
+        this.prioridade = prioridade;
         this.dataDeInicio = dataDeInicio;
         this.dataDeFim = dataDeFim;
         this.concluida = concluida;
@@ -70,6 +73,14 @@ public class Tarefa {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Prioridade getPrioridade() {
+        return prioridade;
+    }
+
+    public void setPrioridade(Prioridade prioridade) {
+        this.prioridade = prioridade;
     }
 
     public LocalDateTime getDataDeInicio() {

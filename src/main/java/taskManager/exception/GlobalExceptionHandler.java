@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TarefaNaoEncontradaException.class)
     public ResponseEntity<ErrorResponse> handleTarefaNaoEncontrada(TarefaNaoEncontradaException ex) {
-         ErrorResponse error = new ErrorResponse(
+        ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
                 "Tarefa não encontrada",
@@ -34,6 +34,17 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(TransicaoStatusInvalidaException.class)
+    public ResponseEntity<ErrorResponse> handleTransicaoInvalida(TransicaoStatusInvalidaException ex) {
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Transição de status inválida",
+                ex.getMessage()
+        );
+        return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

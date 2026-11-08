@@ -1,0 +1,131 @@
+<section class="login-page">
+  <div class="login-shell">
+    <aside class="login-hero" aria-hidden="true">
+      <span class="hero-mark">✓</span>
+      <h2>task<span>flow</span></h2>
+      <p>Organize suas prioridades e acompanhe seu progresso. Um passo de cada vez.</p>
+      <ul class="hero-points">
+        <li>Tarefas separadas por conta</li>
+        <li>Status e progresso num só lugar</li>
+        <li>Acesso protegido por login</li>
+      </ul>
+    </aside>
+
+    <div class="login-card">
+      <div class="tabs" role="tablist" aria-label="Acesso">
+        <button
+          type="button"
+          role="tab"
+          class="tab"
+          [ngClass]="{ active: modo === 'entrar' }"
+          [attr.aria-selected]="modo === 'entrar'"
+          (click)="alternarModo('entrar')"
+        >
+          Entrar
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="tab"
+          [ngClass]="{ active: modo === 'criar' }"
+          [attr.aria-selected]="modo === 'criar'"
+          (click)="alternarModo('criar')"
+        >
+          Criar conta
+        </button>
+      </div>
+
+      <h1>{{ modo === "entrar" ? "Bem-vindo de volta" : "Crie sua conta" }}</h1>
+      <p class="subtitulo">
+        {{
+          modo === "entrar"
+            ? "Entre para ver e gerenciar suas tarefas."
+            : "Leva menos de um minuto para começar."
+        }}
+      </p>
+
+      <div *ngIf="aviso" class="alerta alerta-aviso" role="status">{{ aviso }}</div>
+      <div *ngIf="erro" class="alerta alerta-erro" role="alert">⚠ {{ erro }}</div>
+
+      <form [formGroup]="formulario" (ngSubmit)="onSubmit()" novalidate>
+        <div class="campo" *ngIf="modo === 'criar'">
+          <label for="nome">Nome</label>
+          <input
+            id="nome"
+            type="text"
+            formControlName="nome"
+            autocomplete="name"
+            placeholder="Como devemos te chamar?"
+            [ngClass]="{ 'input-erro': temErro('nome') }"
+          />
+          <span class="erro-campo" *ngIf="temErro('nome')">{{ erroCampo("nome") }}</span>
+        </div>
+
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="voce@exemplo.com"
+            [ngClass]="{ 'input-erro': temErro('email') }"
+          />
+          <span class="erro-campo" *ngIf="temErro('email')">{{ erroCampo("email") }}</span>
+        </div>
+
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <div class="input-senha">
+            <input
+              id="senha"
+              [type]="mostrarSenha ? 'text' : 'password'"
+              formControlName="senha"
+              [attr.autocomplete]="modo === 'entrar' ? 'current-password' : 'new-password'"
+              [placeholder]="modo === 'entrar' ? 'Sua senha' : 'Mínimo de 6 caracteres'"
+              [ngClass]="{ 'input-erro': temErro('senha') }"
+            />
+            <button
+              type="button"
+              class="btn-olho"
+              (click)="alternarVisibilidadeSenha()"
+              [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'"
+            >
+              {{ mostrarSenha ? "Ocultar" : "Mostrar" }}
+            </button>
+          </div>
+          <span class="erro-campo" *ngIf="temErro('senha')">{{ erroCampo("senha") }}</span>
+        </div>
+
+        <div class="campo" *ngIf="modo === 'criar'">
+          <label for="confirmarSenha">Confirmar senha</label>
+          <input
+            id="confirmarSenha"
+            [type]="mostrarSenha ? 'text' : 'password'"
+            formControlName="confirmarSenha"
+            autocomplete="new-password"
+            placeholder="Repita a senha"
+            [ngClass]="{ 'input-erro': temErro('confirmarSenha') }"
+          />
+          <span class="erro-campo" *ngIf="temErro('confirmarSenha')">{{ erroCampo("confirmarSenha") }}</span>
+        </div>
+
+        <button type="submit" class="btn-enviar" [disabled]="loading">
+          <span *ngIf="!loading">{{ modo === "entrar" ? "Entrar" : "Criar conta e entrar" }}</span>
+          <span *ngIf="loading">{{ modo === "entrar" ? "Entrando..." : "Criando conta..." }}</span>
+        </button>
+      </form>
+
+      <p class="troca-modo">
+        <ng-container *ngIf="modo === 'entrar'">
+          Ainda não tem conta?
+          <button type="button" class="link" (click)="alternarModo('criar')">Criar conta</button>
+        </ng-container>
+        <ng-container *ngIf="modo === 'criar'">
+          Já tem conta?
+          <button type="button" class="link" (click)="alternarModo('entrar')">Entrar</button>
+        </ng-container>
+      </p>
+    </div>
+  </div>
+</section>

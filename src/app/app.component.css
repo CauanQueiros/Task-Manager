@@ -62,6 +62,7 @@
   gap: 8px;
 }
 .nav-btn {
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -90,6 +91,39 @@
 }
 .nav-btn.nav-primary:hover {
   background: #5e50d0;
+}
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 6px;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid #e9eaf1;
+  border-radius: 999px;
+  background: #fff;
+  color: #4b5068;
+  font-size: 13px;
+  font-weight: 700;
+}
+.user-avatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #8c7df8, #6255d9);
+  color: #fff;
+  font-size: 13px;
+}
+.user-name {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav-sair:hover {
+  background: #fdecee;
+  color: #c4343a;
 }
 .main-content {
   flex: 1;
@@ -125,6 +159,13 @@
   }
   .nav-links {
     width: 100%;
+    flex-wrap: wrap;
+  }
+  .user-name {
+    display: none;
+  }
+  .user-chip {
+    padding-right: 4px;
   }
   .nav-btn {
     flex: 1;

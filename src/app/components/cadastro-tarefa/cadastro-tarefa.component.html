@@ -88,6 +88,25 @@
         </div>
       </div>
 
+      <!-- Campo Categoria -->
+      <div class="form-group">
+        <label for="categoriaId" class="label">Categoria</label>
+        <select
+          id="categoriaId"
+          formControlName="categoriaId"
+          class="select"
+          [disabled]="loading"
+        >
+          <option [ngValue]="null">Sem categoria</option>
+          <option *ngFor="let categoria of categorias" [ngValue]="categoria.id">
+            {{ categoria.nome }}
+          </option>
+        </select>
+        <a routerLink="/categorias" class="link-categorias"
+          >Criar ou gerenciar categorias</a
+        >
+      </div>
+
       <!-- Campos de Data -->
       <div class="form-row">
         <div class="form-group flex-1">

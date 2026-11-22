@@ -82,7 +82,7 @@
         ><input
           type="search"
           [(ngModel)]="busca"
-          placeholder="Buscar por título, ID ou prioridade..."
+          placeholder="Buscar por título, ID, prioridade ou categoria..."
           aria-label="Buscar tarefas"
       /></label>
       <select
@@ -106,6 +106,17 @@
         <option value="MEDIA">Média</option>
         <option value="BAIXA">Baixa</option>
       </select>
+      <select
+        [ngModel]="filtroCategoria"
+        (ngModelChange)="mudarCategoria($event)"
+        aria-label="Filtrar por categoria"
+        class="status-filter"
+      >
+        <option value="TODAS">Todas as categorias</option>
+        <option *ngFor="let categoria of categorias" [ngValue]="categoria.id">
+          {{ categoria.nome }}
+        </option>
+      </select>
     </div>
   </div>
 
@@ -127,7 +138,7 @@
       {{
         !temFiltroAtivo
           ? "Adicione sua primeira tarefa e tire seus planos do papel."
-          : "Tente mudar a busca ou selecionar outro status ou prioridade."
+          : "Tente mudar a busca ou selecionar outro status, prioridade ou categoria."
       }}
     </p>
     <button *ngIf="temFiltroAtivo" class="btn-clear" (click)="limparFiltros()">
@@ -169,6 +180,10 @@
       <p class="descricao">
         {{ tarefa.descricao || "Sem descrição informada." }}
       </p>
+      <div class="categoria-chip" *ngIf="tarefa.categoria" title="Categoria">
+        <span class="categoria-dot" [style.background]="tarefa.categoria.cor"></span>
+        {{ tarefa.categoria.nome }}
+      </div>
       <div class="datas" *ngIf="tarefa.dataDeInicio || tarefa.dataDeFim">
         <span *ngIf="tarefa.dataDeInicio"
           >▶ Início: {{ tarefa.dataDeInicio | date: "dd/MM/yyyy HH:mm" }}</span

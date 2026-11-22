@@ -22,7 +22,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(requisicao).pipe(
     catchError((erro: HttpErrorResponse) => {
-      // 401 no login/cadastro é "senha errada", não sessão expirada
       if (erro.status === 401 && chamadaDaApi && !chamadaDeAuth) {
         auth.logout("expirada");
       }

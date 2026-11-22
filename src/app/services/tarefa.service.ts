@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { API_URL } from "../config/api.config";
 import {
   PrioridadeTarefa,
   StatusTarefa,
@@ -12,17 +13,24 @@ import {
   providedIn: "root",
 })
 export class TarefaService {
-  private apiUrl = "http://localhost:8080/api/tarefa";
+  private apiUrl = `${API_URL}/tarefa`;
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Lista as tarefas. Se a prioridade for informada, o filtro é feito no backend (banco).
+   * Lista as tarefas. Prioridade e categoria são filtros opcionais, feitos no backend (banco)
+   * e que podem ser combinados.
    */
-  listarTarefas(prioridade?: PrioridadeTarefa): Observable<TarefaResponse[]> {
+  listarTarefas(
+    prioridade?: PrioridadeTarefa,
+    categoriaId?: number,
+  ): Observable<TarefaResponse[]> {
     let params = new HttpParams();
     if (prioridade) {
       params = params.set("prioridade", prioridade);
+    }
+    if (categoriaId !== undefined) {
+      params = params.set("categoriaId", categoriaId);
     }
     return this.http.get<TarefaResponse[]>(`${this.apiUrl}/listar`, { params });
   }

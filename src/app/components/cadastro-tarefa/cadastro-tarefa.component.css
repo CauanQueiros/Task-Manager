@@ -267,3 +267,15 @@ h1 {
     overflow-y: auto;
   }
 }
+
+.link-categorias {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6659d9;
+  text-decoration: none;
+}
+
+.link-categorias:hover {
+  text-decoration: underline;
+}

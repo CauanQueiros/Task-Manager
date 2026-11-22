@@ -67,8 +67,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private void escreverErro(HttpServletResponse response, HttpStatus status,
-                              String erro, String mensagem) throws IOException {
+    private void escreverErro(HttpServletResponse response, HttpStatus status, String erro, String mensagem) throws IOException {
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

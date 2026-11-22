@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
   ReactiveFormsModule,
@@ -6,7 +6,10 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
+import { RouterLink } from "@angular/router";
 import { TarefaService } from "../../services/tarefa.service";
+import { CategoriaService } from "../../services/categoria.service";
+import { Categoria } from "../../models/categoria.model";
 import {
   PrioridadeTarefa,
   StatusTarefa,
@@ -16,14 +19,15 @@ import {
 @Component({
   selector: "app-cadastro-tarefa",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: "./cadastro-tarefa.component.html",
   styleUrls: ["./cadastro-tarefa.component.css"],
 })
-export class CadastroTarefaComponent {
+export class CadastroTarefaComponent implements OnInit {
   formulario: FormGroup;
   statusOptions = Object.values(StatusTarefa);
   prioridadeOptions = Object.values(PrioridadeTarefa);
+  categorias: Categoria[] = [];
   loading: boolean = false;
   sucesso: boolean = false;
   erro: string = "";
@@ -31,8 +35,17 @@ export class CadastroTarefaComponent {
   constructor(
     private fb: FormBuilder,
     private tarefaService: TarefaService,
+    private categoriaService: CategoriaService,
   ) {
     this.formulario = this.createForm();
+  }
+
+  ngOnInit(): void {
+    // se falhar, o campo só mostra "Sem categoria": cadastrar tarefa continua funcionando
+    this.categoriaService.listarCategorias().subscribe({
+      next: (dados) => (this.categorias = dados),
+      error: (err) => console.error("Erro ao carregar categorias:", err),
+    });
   }
 
   /**
@@ -61,6 +74,7 @@ export class CadastroTarefaComponent {
       dataDeInicio: [""],
       dataDeFim: [""],
       concluida: [false],
+      categoriaId: [null],
     });
   }
 
@@ -88,6 +102,8 @@ export class CadastroTarefaComponent {
       dataDeFim: valores.dataDeFim || null,
       // mantém "concluida" coerente com o status escolhido
       concluida: valores.status === StatusTarefa.CONCLUIDA,
+      // "Sem categoria" chega como null/vazio — o backend trata como tarefa sem categoria
+      categoriaId: valores.categoriaId ?? null,
     };
 
     this.tarefaService.criarTarefa(tarefa).subscribe({
@@ -97,6 +113,7 @@ export class CadastroTarefaComponent {
           status: StatusTarefa.FAZER,
           prioridade: PrioridadeTarefa.MEDIA,
           concluida: false,
+          categoriaId: null,
         });
         this.loading = false;
 
@@ -151,6 +168,7 @@ export class CadastroTarefaComponent {
       prioridade: "Prioridade",
       dataDeInicio: "Data de Início",
       dataDeFim: "Data de Fim",
+      categoriaId: "Categoria",
     };
     return labels[fieldName] || fieldName;
   }
@@ -172,6 +190,7 @@ export class CadastroTarefaComponent {
       status: StatusTarefa.FAZER,
       prioridade: PrioridadeTarefa.MEDIA,
       concluida: false,
+      categoriaId: null,
     });
   }
 }

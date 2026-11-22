@@ -1,3 +1,5 @@
+import { Categoria } from "./categoria.model";
+
 export enum StatusTarefa {
   FAZER = "FAZER",
   EM_PROGRESSO = "EM_PROGRESSO",
@@ -19,6 +21,7 @@ export interface Tarefa {
   dataDeInicio?: string | null;
   dataDeFim?: string | null;
   concluida: boolean;
+  categoriaId?: number | null;
 }
 
 export interface TarefaResponse {
@@ -30,4 +33,5 @@ export interface TarefaResponse {
   dataDeInicio?: string | null;
   dataDeFim?: string | null;
   concluida: boolean;
+  categoria?: Categoria | null;
 }

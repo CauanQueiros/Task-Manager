@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { TarefaService } from "../../services/tarefa.service";
+import { CategoriaService } from "../../services/categoria.service";
+import { Categoria } from "../../models/categoria.model";
 import { Subscription } from "rxjs";
 import {
   TarefaResponse,
@@ -23,6 +25,8 @@ export class ListaTarefasComponent implements OnInit, OnDestroy {
   busca = "";
   filtroStatus = "TODOS";
   filtroPrioridade: "TODAS" | PrioridadeTarefa = "TODAS";
+  filtroCategoria: "TODAS" | number = "TODAS";
+  categorias: Categoria[] = [];
   private requisicaoAtual?: Subscription;
   private atualizandoIds = new Set<number>();
   readonly StatusTarefa = StatusTarefa;
@@ -31,7 +35,8 @@ export class ListaTarefasComponent implements OnInit, OnDestroy {
     return (
       !!this.busca.trim() ||
       this.filtroStatus !== "TODOS" ||
-      this.filtroPrioridade !== "TODAS"
+      this.filtroPrioridade !== "TODAS" ||
+      this.filtroCategoria !== "TODAS"
     );
   }
 
@@ -52,6 +57,7 @@ export class ListaTarefasComponent implements OnInit, OnDestroy {
         this.normalizar(tarefa.titulo).includes(termo) ||
         this.normalizar(tarefa.descricao).includes(termo) ||
         String(tarefa.id) === termoId ||
+        this.normalizar(tarefa.categoria?.nome ?? "").includes(termo) ||
         this.normalizar(this.getPrioridadeText(tarefa.prioridade)).includes(
           termo,
         );
@@ -74,10 +80,12 @@ export class ListaTarefasComponent implements OnInit, OnDestroy {
   }
 
   limparFiltros(): void {
-    const precisaRecarregar = this.filtroPrioridade !== "TODAS";
+    const precisaRecarregar =
+      this.filtroPrioridade !== "TODAS" || this.filtroCategoria !== "TODAS";
     this.busca = "";
     this.filtroStatus = "TODOS";
     this.filtroPrioridade = "TODAS";
+    this.filtroCategoria = "TODAS";
     if (precisaRecarregar) {
       this.carregarTarefas();
     }
@@ -89,10 +97,28 @@ export class ListaTarefasComponent implements OnInit, OnDestroy {
     this.carregarTarefas();
   }
 
-  constructor(private tarefaService: TarefaService) {}
+  /** O filtro de categoria também é feito no backend */
+  mudarCategoria(valor: "TODAS" | number): void {
+    this.filtroCategoria = valor;
+    this.carregarTarefas();
+  }
+
+  constructor(
+    private tarefaService: TarefaService,
+    private categoriaService: CategoriaService,
+  ) {}
 
   ngOnInit(): void {
+    this.carregarCategorias();
     this.carregarTarefas();
+  }
+
+  /** Alimenta o select de categorias; se falhar, a lista de tarefas continua funcionando */
+  private carregarCategorias(): void {
+    this.categoriaService.listarCategorias().subscribe({
+      next: (dados) => (this.categorias = dados),
+      error: (err) => console.error("Erro ao carregar categorias:", err),
+    });
   }
 
   ngOnDestroy(): void {
@@ -109,8 +135,11 @@ export class ListaTarefasComponent implements OnInit, OnDestroy {
     const prioridade =
       this.filtroPrioridade === "TODAS" ? undefined : this.filtroPrioridade;
 
+    const categoriaId =
+      this.filtroCategoria === "TODAS" ? undefined : this.filtroCategoria;
+
     this.requisicaoAtual = this.tarefaService
-      .listarTarefas(prioridade)
+      .listarTarefas(prioridade, categoriaId)
       .subscribe({
         next: (data) => {
           this.tarefas = data;

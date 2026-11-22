@@ -569,3 +569,24 @@ h1 {
   color: #21865e;
   background: #f2fbf6;
 }
+
+.categoria-chip {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #f3f4f9;
+  color: #4b5068;
+  font-size: 11px;
+  font-weight: 700;
+  max-width: 100%;
+}
+.categoria-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

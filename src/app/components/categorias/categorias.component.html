@@ -1,0 +1,93 @@
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <span class="eyebrow">ORGANIZAÇÃO</span>
+      <h1>Categorias<span class="heading-dot">.</span></h1>
+      <p class="subtitle">
+        Agrupe suas tarefas por assunto e filtre tudo mais rápido.
+      </p>
+    </div>
+    <a routerLink="/tarefas/nova" class="btn-link">＋ Nova tarefa</a>
+  </div>
+
+  <div *ngIf="sucesso" class="alerta alerta-sucesso" role="status">
+    ✓ {{ sucesso }}
+  </div>
+  <div *ngIf="erro" class="alerta alerta-erro" role="alert">⚠ {{ erro }}</div>
+
+  <form class="nova" [formGroup]="formulario" (ngSubmit)="onSubmit()">
+    <h2>Nova categoria</h2>
+    <div class="nova-linha">
+      <div class="campo">
+        <label for="nomeCategoria">Nome</label>
+        <input
+          id="nomeCategoria"
+          type="text"
+          formControlName="nome"
+          maxlength="60"
+          placeholder="Ex: Trabalho, Estudos, Casa"
+          [disabled]="salvando"
+        />
+      </div>
+      <div class="campo">
+        <label>Cor</label>
+        <div class="cores">
+          <button
+            *ngFor="let cor of coresSugeridas"
+            type="button"
+            class="cor"
+            [class.selecionada]="formulario.value.cor === cor"
+            [style.background]="cor"
+            [attr.aria-label]="'Escolher a cor ' + cor"
+            (click)="escolherCor(cor)"
+          ></button>
+          <input
+            type="color"
+            class="cor-livre"
+            formControlName="cor"
+            aria-label="Escolher outra cor"
+          />
+        </div>
+      </div>
+      <button type="submit" class="btn-criar" [disabled]="salvando">
+        {{ salvando ? "Criando..." : "Criar categoria" }}
+      </button>
+    </div>
+  </form>
+
+  <div class="toolbar">
+    <div class="section-title">
+      <h2>Suas categorias</h2>
+      <span
+        >{{ categorias.length }}
+        {{ categorias.length === 1 ? "categoria" : "categorias" }}</span
+      >
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando categorias...</p>
+  </div>
+
+  <div *ngIf="!loading && categorias.length === 0" class="empty-state">
+    <div class="empty-icon">◈</div>
+    <h3>Nenhuma categoria ainda</h3>
+    <p>Crie a primeira acima e use-a ao cadastrar suas tarefas.</p>
+  </div>
+
+  <ul *ngIf="!loading && categorias.length > 0" class="lista">
+    <li *ngFor="let categoria of categorias" class="item">
+      <span class="item-cor" [style.background]="categoria.cor"></span>
+      <span class="item-nome">{{ categoria.nome }}</span>
+      <button
+        type="button"
+        class="btn-deletar"
+        (click)="deletarCategoria(categoria)"
+        [attr.aria-label]="'Excluir categoria ' + categoria.nome"
+      >
+        Excluir <span>×</span>
+      </button>
+    </li>
+  </ul>
+</section>

@@ -3,6 +3,7 @@ import { authGuard, visitanteGuard } from "./guards/auth.guard";
 import { LoginComponent } from "./components/login/login.component";
 import { ListaTarefasComponent } from "./components/lista-tarefas/lista-tarefas.component";
 import { CadastroTarefaComponent } from "./components/cadastro-tarefa/cadastro-tarefa.component";
+import { CategoriasComponent } from "./components/categorias/categorias.component";
 
 export const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "tarefas" },
@@ -13,5 +14,6 @@ export const routes: Routes = [
     component: CadastroTarefaComponent,
     canActivate: [authGuard],
   },
+  { path: "categorias", component: CategoriasComponent, canActivate: [authGuard] },
   { path: "**", redirectTo: "tarefas" },
 ];

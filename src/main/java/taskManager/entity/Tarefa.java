@@ -30,6 +30,10 @@ public class Tarefa {
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_tarefa_usuario"))
     private Usuario usuario;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", foreignKey = @ForeignKey(name = "fk_tarefa_categoria"))
+    private Categoria categoria;
+
     public Tarefa(String titulo, String descricao, Status status, Prioridade prioridade, LocalDateTime dataDeInicio, LocalDateTime dataDeFim, Boolean concluida) {
         this.titulo = titulo;
         this.descricao = descricao;
@@ -113,5 +117,13 @@ public class Tarefa {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 }
